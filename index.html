@@ -1,0 +1,291 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <!--Mobile Meta Tags-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black transparent">
+    <title>Northside Youth Soccer League - Mobile Version</title>
+    <!--Logo Icon-->
+    <link rel="shortcut icon" sizes="196x196" href="/style/images/icons/nysl_logo.png">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <!--Google Fonts-->
+    <link href="https://fonts.googleapis.com/css?family=Oswald" rel="stylesheet">
+    <!--Main CSS-->
+    <link rel="stylesheet" type="text/css" href="style/style.css">
+</head>
+
+<body>
+    <div id="app" class="body">
+        <div id="home-page" class="home-page page-div" v-if="pageLocation == 0">
+            <div class="header">
+                <h1>northside youth soccer league</h1>
+            </div>
+            <div class="nav-btn maps-btn" @click="setMapsPage()">
+                <img src="style/images/icons/location-icon.svg" alt="location image">
+            </div>
+            <div class="nav-btn games-btn" @click="setGamesPage()">
+                <img src="style/images/icons/soccer-ball-icon.svg" alt="games icon">
+            </div>
+            <div class="nav-btn teams-btn" @click="setTeamsPage()">
+                <img src="style/images/icons/teams-icon.svg" alt="teams icon">
+            </div>
+            <div class="nav-btn chat-btn" @click="setChatPage()">
+                <img src="style/images/icons/chat-icon.svg" alt="chat icon">
+            </div>
+        </div>
+        <div id="games-page" class="games-page page-div" v-if="pageLocation == 1">
+            <nav id="top-nav" class="top-nav">
+                <div id="back-button" class="back-button" @click="backButton()">
+                    BACK
+                </div>
+                <div id="games-button" class="games-button" @click="setGamesPage()">
+                    GAMES
+                </div>
+                <div id="home-button" class="home-button" @click="setHomePage()">
+                    HOME
+                </div>
+            </nav>
+            <nav id="bot-nav" class="bot-nav">
+                <div id="maps-button" class="maps-button" @click="setMapsPage()">
+                    MAPS
+                </div>
+                <div id="teams-button" class="teams-button" @click="setTeamsPage()">
+                    TEAMS
+                </div>
+                <div id="chat-button" class="chat-button" @click="setChatPage()">
+                    CHAT
+                </div>
+            </nav>
+            <div id="all-games" class="all-games">
+                <div class="each-game" v-for="game in games" :style="{ 'background-color': setBackgroundColor() }">
+                    <div class="match-host" :style="{ 'background-image': 'url(style/images/shields/' + game.host.shield +')' }" @click="setTeamPage(game.id.host)">
+                        <div class="host-team-name hide-in-portrait">{{game.host.name}}</div>
+                    </div>
+                    <div class="date-location" @click="setMapPage(game.location.id)">
+                        <div class="match-date">
+                            <div>{{game.date}}</div>
+                        </div>
+                        <div class="match-location">
+                            <div>{{game.location.name}}</div>
+                        </div>
+                    </div>
+                    <div class="match-visitor" :style="{ 'background-image': 'url(style/images/shields/' + game.visitor.shield +')' }" @click="setTeamPage(game.id.visitor)">
+                        <div class="visitor-team-name hide-in-portrait">{{game.visitor.name}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="teams-page" class="teams-page page-div" v-if="pageLocation == 2">
+            <nav id="top-nav" class="top-nav">
+                <div id="back-button" class="back-button" @click="backButton()">
+                    BACK
+                </div>
+
+                <div id="teams-button" class="teams-button" @click="setTeamsPage()">
+                    TEAMS
+                </div>
+                <div id="home-button" class="home-button" @click="setHomePage()">
+                    HOME
+                </div>
+            </nav>
+            <nav id="bot-nav" class="bot-nav">
+                <div id="maps-button" class="maps-button" @click="setMapsPage()">
+                    MAPS
+                </div>
+                <div id="games-button" class="games-button" @click="setGamesPage()">
+                    GAMES
+                </div>
+                <div id="chat-button" class="chat-button" @click="setChatPage()">
+                    CHAT
+                </div>
+            </nav>
+            <div id="all-teams" class="all-teams">
+                <div class="each-team" v-for="team in teams" :style="{ 'background-image': 'url(style/images/shields/' + team.shield +')' }" @click="setTeamPage(team.id)"></div>
+            </div>
+        </div>
+        <div id="team-page" class="team-page page-div" v-if="pageLocation == 3">
+            <nav id="top-nav" class="top-nav">
+                <div id="back-button" class="back-button" @click="backButton()">
+                    BACK
+                </div>
+                <div id="games-button" class="games-button" @click="setGamesPage()">
+                    GAMES
+                </div>
+                <div id="home-button" class="home-button" @click="setHomePage()">
+                    HOME
+                </div>
+            </nav>
+            <nav id="bot-nav" class="bot-nav">
+                <div id="maps-button" class="maps-button" @click="setMapsPage()">
+                    MAPS
+                </div>
+                <div id="teams-button" class="teams-button" @click="setTeamsPage()">
+                    TEAMS
+                </div>
+                <div id="chat-button" class="chat-button" @click="setChatPage()">
+                    CHAT
+                </div>
+            </nav>
+            <div id="team-container" class="team-container">
+                <div class="name">
+                    <div class="team-name">{{team.name}}</div>
+                    <div class="team-shield hide-in-portrait" :style="{ 'background-image': 'url(style/images/shields/' + team.shield +')' }"></div>
+                </div>
+                <div class="next-games">
+                    <div class="each-game-team" v-for="game in games" :style="{ 'background-color': setBackgroundColor() }">
+                        <div class="match-host" :style="{ 'background-image': 'url(style/images/shields/' + game.host.shield +')' }" @click="setTeamPage(game.id.host)">
+                        </div>
+                        <div class="date-location" @click="setMapPage(game.location.id)">
+                            <div class="match-date">
+                                <div>{{game.date}}</div>
+                            </div>
+                            <div class="match-location">
+                                <div>{{game.location.name}}</div>
+                            </div>
+                        </div>
+                        <div class="match-visitor" :style="{ 'background-image': 'url(style/images/shields/' + game.visitor.shield +')' }" @click="setTeamPage(game.id.visitor)">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="maps-page" class="maps-page page-div" v-if="pageLocation == 4">
+            <nav id="top-nav" class="top-nav">
+                <div id="back-button" class="back-button" @click="backButton()">
+                    BACK
+                </div>
+                <div id="maps-button" class="maps-button" @click="setMapsPage()">
+                    MAPS
+                </div>
+                <div id="home-button" class="home-button" @click="setHomePage()">
+                    HOME
+                </div>
+            </nav>
+            <nav id="bot-nav" class="bot-nav">
+                <div id="teams-button" class="teams-button" @click="setTeamsPage()">
+                    TEAMS
+                </div>
+                <div id="games-button" class="games-button" @click="setGamesPage()">
+                    GAMES
+                </div>
+                <div id="chat-button" class="chat-button" @click="setChatPage()">
+                    CHAT
+                </div>
+            </nav>
+            <div class="all-maps">
+                <div class="each-location" v-for="map in maps" @click="setMapPage(map.id)">
+                    {{map.name}}
+                </div>
+            </div>
+        </div>
+        <div id="map-page" class="map-page page-div" v-if="pageLocation == 5">
+            <nav id="top-nav" class="top-nav">
+                <div id="back-button" class="back-button" @click="backButton()">
+                    BACK
+                </div>
+                <div id="maps-button" class="maps-button" @click="setMapsPage()">
+                    MAPS
+                </div>
+                <div id="home-button" class="home-button" @click="setHomePage()">
+                    HOME
+                </div>
+            </nav>
+            <nav id="bot-nav" class="bot-nav">
+                <div id="teams-button" class="teams-button" @click="setTeamsPage()">
+                    TEAMS
+                </div>
+                <div id="games-button" class="games-button" @click="setGamesPage()">
+                    GAMES
+                </div>
+                <div id="chat-button" class="chat-button" @click="setChatPage()">
+                    CHAT
+                </div>
+            </nav>
+            <div class="map-container">
+                <div class="map-name hide-in-landscape">
+                    {{map.name}}
+                </div>
+                <div class="map-iframe">
+                    <iframe :src="map.src" frameborder="0"></iframe>
+                </div>
+                <div class="link-div hide-in-landscape">
+                    <a :href="map.link" target="_blank">go to google maps</a>
+                </div>
+            </div>
+        </div>
+        <div id="chat-page" class="chat-page page-div" v-if="pageLocation == 6">
+            <nav id="top-nav" class="top-nav">
+                <div id="back-button" class="back-button" @click="backButton()">
+                    BACK
+                </div>
+                <div id="chat-button" class="chat-button" @click="setChatPage">
+                    CHAT
+                </div>
+                <div id="home-button" class="home-button" @click="setHomePage()">
+                    HOME
+                </div>
+            </nav>
+            <nav id="bot-nav" class="bot-nav">
+                <div id="teams-button" class="teams-button" @click="setTeamsPage()">
+                    TEAMS
+                </div>
+                <div id="games-button" class="games-button" @click="setGamesPage()">
+                    GAMES
+                </div>
+                <div id="maps-button" class="maps-button" @click="setMapsPage()">
+                    MAPS
+                </div>
+            </nav>
+            <div class="chat-container">
+                <div class="login-logout">
+                    <div id="login" v-if="userLoged == false" @click="login()">Log in</div>
+                    <div id="logout" v-if="userLoged == true" @click="logout()">Log out</div>
+                </div>
+                <div class="chat-window" id="chat-window">
+                   <div class="show-more" @click="showMorePosts()" v-if="showMorePostsButton == true">Read More</div>
+                    <div class="each-post" v-for="post in posts" :class="post.user">
+                        <div class="username" @click="fillUserObject(post)">
+                            {{post.name}}
+                        </div>
+                        <div class="post-text" :class="post.image">
+                            {{post.text}}
+                        </div>
+                    </div>
+                </div>
+                <div class="submit-div" v-if="userLoged == true">
+                    <input type="text" id="write-txt" @keyup.13="writeNewPost()">
+                    <button id="submit" @click="writeNewPost()">Send</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- jQuery library -->
+    <script src=" https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js "></script>
+    <!-- Bootstrap JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js "></script>
+    <!--Vue.js Development-->
+    <script src="https://unpkg.com/vue/dist/vue.js "></script>
+    <!--Firebase-->
+    <script src="https://www.gstatic.com/firebasejs/5.1.0/firebase.js"></script>
+    <script>
+        // Initialize Firebase
+        var config = {
+            apiKey: "AIzaSyDIdB4g53YtJtehw8dv0dH8dFyE1lGNY4g",
+            authDomain: "northsideyouthsoccerleague.firebaseapp.com",
+            databaseURL: "https://northsideyouthsoccerleague.firebaseio.com",
+            projectId: "northsideyouthsoccerleague",
+            storageBucket: "",
+            messagingSenderId: "784221242991"
+        };
+        firebase.initializeApp(config);
+    </script>
+    <!--My JavaScript-->
+    <script src="script/main.js "></script>
+</body>
+
+</html>
